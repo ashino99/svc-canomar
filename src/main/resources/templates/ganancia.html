@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Ganancia del día')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Ganancia del día', '/cuadre')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <form th:action="@{/ganancia}" method="get" class="fila">
+        <input type="date" name="fecha" th:value="${g.fecha()}">
+        <button class="btn btn-sec" style="margin-top:0" type="submit">Calcular</button>
+    </form>
+    <div th:if="${g.provisional()}" class="alerta alerta-aviso">Resultado provisional: el día aún no tiene cuadre.</div>
+    <div class="item"><div><div class="t1">Ventas</div><div class="t2" th:text="${g.ventasCantidad()} + (${g.ventasCantidad() == 1} ? ' venta' : ' ventas')"></div></div><span class="v" th:text="${@fmt.soles(g.ventas())}"></span></div>
+    <div class="item"><div><div class="t1">Costo de lo vendido</div><div class="t2">Costo por kilo de cada lote vendido</div></div><span class="v rojo" th:text="'− ' + ${@fmt.soles(g.costo())}"></span></div>
+    <div class="item"><div><div class="t1">Autoconsumo, mermas y desechos</div><div class="t2">Valorizados al costo</div></div><span class="v rojo" th:text="'− ' + ${@fmt.soles(g.perdidas())}"></span></div>
+    <div class="item"><div><div class="t1">Gastos menores</div><div class="t2">Hielo, bolsas, estiba…</div></div><span class="v rojo" th:text="'− ' + ${@fmt.soles(g.gastos())}"></span></div>
+    <div class="total"><span>Ganancia del día (RF40)</span><span th:text="${@fmt.soles(g.ganancia())} + ' (' + ${g.margen()} + '%)'"></span></div>
+
+    <h2>Historial de cuadres (RF41)</h2>
+    <form th:action="@{/ganancia}" method="get" class="fila">
+        <div><label>Desde</label><input type="date" name="desde" th:value="${desde}"></div>
+        <div><label>Hasta</label><input type="date" name="hasta" th:value="${hasta}"></div>
+        <button class="btn btn-sec" type="submit" style="grid-column:span 2">Consultar</button>
+    </form>
+    <div class="item" th:each="c : ${historial}" style="margin-top:6px">
+        <div><div class="t1" th:text="${@fmt.fecha(c.fecha())}"></div>
+            <div class="t2" th:text="'Diferencia ' + ${@fmt.soles(c.diferenciaEfectivo())} + (${c.motivo() != null} ? ' · ' + ${c.motivo()} : '')"></div></div>
+        <span class="v" th:text="${@fmt.soles(c.ganancia())}"></span></div>
+    <p class="ayuda" th:text="${historial.size()} + (${historial.size() == 1} ? ' cuadre' : ' cuadres') + ' · total ' + ${@fmt.soles(sumaHistorial)} + ' · promedio ' + ${@fmt.soles(promedio)}"></p>
+    <p th:replace="~{fragments/base :: pie('P17 Ganancia del día · RF40 RF41')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

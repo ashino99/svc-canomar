@@ -1,0 +1,172 @@
+/* SVC-Canomar · estilos para celular primero (mismo diseño del prototipo del APF2) */
+:root {
+    --navy: #0E3A5B; --navy-2: #0A2840; --teal: #1A8A8A; --teal-claro: #E1F3F3;
+    --fondo: #F4F6F8; --tarjeta: #FFFFFF; --tinta: #14181E; --gris: #6E7680; --linea: #DCE0E6;
+    --rojo: #C42828; --naranja: #D67814; --verde: #1E8246;
+    --radio: 12px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 16px; color: var(--tinta); background: var(--fondo);
+    padding-bottom: 76px; -webkit-text-size-adjust: 100%;
+}
+a { color: var(--teal); }
+
+/* Barra superior */
+.barra {
+    position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 10px;
+    background: var(--navy); color: #fff; padding: 12px 14px; min-height: 56px;
+}
+.barra h1 { font-size: 18px; margin: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.barra .atras { color: #fff; text-decoration: none; font-size: 30px; line-height: 1; padding: 0 6px 4px 0; }
+.chip { border: 0; border-radius: 14px; padding: 5px 11px; font-size: 12px; font-weight: 700; color: #fff; cursor: pointer; }
+.chip-ok { background: var(--verde); }
+.chip-pend { background: var(--naranja); }
+.chip-off { background: var(--rojo); }
+
+/* Contenido */
+.contenido { max-width: 640px; margin: 0 auto; padding: 14px 14px 20px; }
+h2 { font-size: 15px; color: var(--navy); margin: 18px 2px 8px; }
+.ayuda { color: var(--gris); font-size: 13px; margin: 2px 2px 10px; }
+.tarjeta { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: var(--radio); padding: 12px 14px; margin-bottom: 10px; }
+
+/* Indicadores */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; margin-bottom: 10px; }
+.kpi { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: var(--radio); padding: 10px; }
+.kpi small { display: block; color: var(--gris); font-size: 12px; }
+.kpi b { display: block; font-size: 18px; color: var(--navy); margin-top: 4px; }
+.kpi b.rojo { color: var(--rojo); } .kpi b.verde { color: var(--verde); }
+
+/* Mosaico del inicio */
+.mosaico { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mosaico a {
+    background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 14px; text-decoration: none;
+    color: var(--tinta); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; font-weight: 700; font-size: 14px;
+}
+.mosaico .ic { width: 42px; height: 42px; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; font-size: 16px; }
+
+/* Listas */
+.item {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px;
+    text-decoration: none; color: var(--tinta);
+}
+.item .t1 { font-weight: 700; }
+.item .t2 { font-size: 12px; color: var(--gris); margin-top: 2px; }
+.item .v { font-weight: 700; white-space: nowrap; }
+.rojo { color: var(--rojo) !important; } .naranja { color: var(--naranja) !important; } .verde { color: var(--verde) !important; } .gris { color: var(--gris) !important; }
+.tachado { text-decoration: line-through; opacity: .65; }
+
+/* Formularios */
+label { display: block; font-size: 13px; font-weight: 700; color: var(--gris); margin: 10px 2px 4px; }
+input, select, textarea {
+    width: 100%; font-size: 17px; padding: 11px 12px; border: 1px solid var(--linea); border-radius: 10px; background: #fff; color: var(--tinta);
+    min-height: 48px;
+}
+input:focus, select:focus { outline: 2px solid var(--teal); border-color: var(--teal); }
+.fila { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fila3 { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 6px; align-items: end; }
+.check { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--tinta); }
+.check input { width: 22px; min-height: 22px; }
+
+.btn {
+    display: block; width: 100%; border: 0; border-radius: 12px; background: var(--teal); color: #fff; font-size: 17px; font-weight: 700;
+    padding: 14px; min-height: 50px; margin-top: 12px; cursor: pointer; text-align: center; text-decoration: none;
+}
+.btn-sec { background: #fff; color: var(--teal); border: 2px solid var(--teal); }
+.btn-rojo { background: var(--rojo); }
+.btn-chico { display: inline-block; width: auto; padding: 8px 14px; min-height: 40px; font-size: 14px; margin-top: 0; }
+.botones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* Segmentos (público / restaurante) */
+.segmento { display: grid; grid-auto-flow: column; background: #E2E8EE; border-radius: 22px; padding: 3px; margin: 6px 0; }
+.segmento input { display: none; }
+.segmento label { margin: 0; text-align: center; padding: 10px; border-radius: 20px; color: var(--tinta); font-size: 14px; cursor: pointer; }
+.segmento input:checked + label { background: var(--teal); color: #fff; }
+
+/* Productos de la venta */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button {
+    border: 1px solid #C9DAEA; background: #E1ECF5; color: var(--navy); border-radius: 18px; padding: 9px 12px; font-weight: 700; font-size: 14px; cursor: pointer;
+}
+.chips button:disabled { opacity: .45; }
+.linea-venta { display: grid; grid-template-columns: 1fr 92px 92px 34px; gap: 6px; align-items: center; margin-bottom: 6px; }
+.linea-venta input { min-height: 44px; font-size: 16px; padding: 8px; }
+.linea-venta .quitar { border: 0; background: none; color: var(--rojo); font-size: 22px; cursor: pointer; }
+.total {
+    background: var(--navy); color: #fff; border-radius: 10px; padding: 12px 14px; font-weight: 700; font-size: 18px; margin-top: 10px;
+    display: flex; justify-content: space-between;
+}
+
+/* Alertas */
+.alerta { border-radius: 10px; padding: 11px 12px; margin-bottom: 10px; border-left: 5px solid; background: #fff; font-size: 15px; }
+.alerta-ok { border-color: var(--verde); background: #E6F4EC; }
+.alerta-aviso { border-color: var(--naranja); background: #FBEFE2; }
+.alerta-error { border-color: var(--rojo); background: #FAE6E6; }
+
+/* Tablas */
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; font-size: 14px; }
+th, td { padding: 8px; border-bottom: 1px solid var(--linea); text-align: left; }
+th { background: #E8F1F7; color: var(--navy); font-size: 13px; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.tabla { overflow-x: auto; margin-bottom: 10px; }
+
+/* Barra inferior */
+.nav-inferior {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; display: flex; background: #fff; border-top: 1px solid var(--linea);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-inferior a { flex: 1; text-align: center; text-decoration: none; color: var(--gris); font-size: 12px; padding: 8px 0 10px; }
+.nav-inferior .ic { display: block; font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+.nav-inferior a.activo { color: var(--teal); font-weight: 700; }
+
+/* Login */
+.login { min-height: 100vh; background: var(--navy); color: #fff; display: flex; flex-direction: column; justify-content: center; padding: 30px 26px; }
+.login .logo { width: 80px; height: 80px; border-radius: 50%; background: var(--teal); display: grid; place-items: center; font-size: 38px; font-weight: 800; margin: 0 auto 12px; }
+.login h1 { text-align: center; margin: 0; font-size: 28px; }
+.login p { text-align: center; color: #BED2E1; margin: 6px 0 24px; }
+.login label { color: #C8D7E6; }
+.login .form { max-width: 420px; width: 100%; margin: 0 auto; }
+
+details summary { cursor: pointer; font-weight: 700; color: var(--navy); padding: 6px 2px; }
+.oculto { display: none !important; }
+
+@media (min-width: 900px) {
+    .contenido { max-width: 860px; }
+    .mosaico { grid-template-columns: repeat(5, 1fr); }
+}
+
+/* Rótulo de pantalla y RF (trazabilidad, APF3 cap. 4) */
+.rotulo { text-align: center; color: var(--gris); font-size: 11px; margin: 18px 0 4px; letter-spacing: .3px; }
+
+/* Producto sin saldo en la pantalla Vender (hallazgo H01 del APF3) */
+.chips button.agotado { border-style: dashed; border-color: #D67814; color: #8a4b0d; background: #fbf1e6; }
+
+/* Avisos legibles sobre el fondo oscuro de la pantalla de acceso (hallazgo H07) */
+.login .alerta { color: #1B2A36; }
+
+/* Modo oscuro: se activa solo si el celular o la PC tienen el tema oscuro */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --navy: #0B2236; --navy-2: #081A2A; --teal: #2BB3B3; --teal-claro: #12302F;
+        --fondo: #101418; --tarjeta: #1A2028; --tinta: #E6EAEE; --gris: #9AA4AE; --linea: #2E3742;
+        --rojo: #F06262; --naranja: #F0A04B; --verde: #4CC27A;
+    }
+    h2, .kpi b, th, .chips button { color: #9CC9EA; }
+    input, select, textarea { background: #12171D !important; color: var(--tinta) !important; border-color: var(--linea) !important; color-scheme: dark; }
+    .btn-sec { background: transparent; }
+    .segmento { background: #232B35; }
+    .chips button { background: #17283A; border-color: #2A4560; }
+    .chips button.agotado { background: #2E2213; color: #F0B36B; border-color: #F0A04B; }
+    .alerta { background: var(--tarjeta); color: var(--tinta); }
+    .alerta-ok { background: #13281C; }
+    .alerta-aviso { background: #2E2213; }
+    .alerta-error { background: #2E1616; }
+    table { background: var(--tarjeta); }
+    th { background: #1E2A36; }
+    .nav-inferior { background: #141A20; }
+    .login .alerta { color: var(--tinta); }
+    .mosaico .ic { background: #1F4A6E; }
+}

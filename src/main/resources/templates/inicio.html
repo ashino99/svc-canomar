@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/base :: head('Inicio')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Canomar', null)}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <h2 th:text="'Hola, ' + ${yo.nombre} + ' · ' + ${@fmt.fecha(hoy)}">Hola</h2>
+
+    <div class="kpis" sec:authorize="hasAnyRole('VENDEDOR','ADMINISTRADOR')">
+        <div class="kpi"><small>Ventas hoy</small><b th:text="${@fmt.soles(panel.ventasHoy())}">S/ 0</b></div>
+        <div class="kpi" sec:authorize="hasRole('ADMINISTRADOR')"><small>Ganancia hoy</small><b class="verde" th:text="${@fmt.soles(panel.gananciaHoy())}">S/ 0</b></div>
+        <div class="kpi"><small>Saldo</small><b th:text="${@fmt.kg(panel.kilosSaldo())}">0 kg</b></div>
+        <div class="kpi" sec:authorize="hasRole('ADMINISTRADOR')"><small>Por cobrar</small><b class="rojo" th:text="${@fmt.soles(panel.porCobrar())}">S/ 0</b></div>
+        <div class="kpi" sec:authorize="hasRole('ADMINISTRADOR')"><small>Deuda proveedores</small><b th:text="${@fmt.soles(panel.deudaProveedores())}">S/ 0</b></div>
+    </div>
+
+    <!-- RF29: mercadería antigua -->
+    <div sec:authorize="hasAnyRole('VENDEDOR','ADMINISTRADOR')" th:each="l : ${panel.mercaderiaAntigua()}" class="alerta alerta-aviso">
+        <b th:text="${l.lote().producto()} + ': ' + ${@fmt.kg(l.lote().kilos())} + ' con ' + ${l.dias()} + ' días'"></b><br>
+        <a th:href="@{/vender(remate=true)}">Registrar remate</a> · <a th:href="@{/saldo}">autoconsumo</a>
+    </div>
+    <!-- RF34: deudas vencidas -->
+    <div sec:authorize="hasRole('ADMINISTRADOR')" th:if="${!panel.clientesVencidos().isEmpty()}" class="alerta alerta-error">
+        <b th:text="${panel.clientesVencidos().size()} + (${panel.clientesVencidos().size() == 1} ? ' cliente con deuda vencida o sobre su límite' : ' clientes con deuda vencida o sobre su límite')"></b><br>
+        <span th:each="c, it : ${panel.clientesVencidos()}" th:text="${c.nombre()} + ' (' + ${@fmt.soles(c.vencido())} + ')' + (${it.last} ? '' : ' · ')"></span><br>
+        <a th:href="@{/cobranza}">Ver cobranza</a>
+    </div>
+
+    <div class="mosaico">
+        <a sec:authorize="hasAnyRole('VENDEDOR','ADMINISTRADOR')" th:href="@{/vender}"><span class="ic">S/</span>Vender</a>
+        <a sec:authorize="hasAnyRole('VENDEDOR','ADMINISTRADOR')" th:href="@{/compras/nueva}"><span class="ic">⇣</span>Compras</a>
+        <a sec:authorize="hasAnyRole('VENDEDOR','ADMINISTRADOR')" th:href="@{/precios}"><span class="ic">%</span>Precios</a>
+        <a sec:authorize="hasAnyRole('VENDEDOR','ADMINISTRADOR')" th:href="@{/saldo}"><span class="ic">kg</span>Saldo</a>
+        <a th:href="@{/clientes}"><span class="ic">☺</span>Clientes</a>
+        <a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/cobranza}"><span class="ic">!</span>Cobranza</a>
+        <a sec:authorize="hasAnyRole('VENDEDOR','ADMINISTRADOR')" th:href="@{/cuadre}"><span class="ic">=</span>Cuadre</a>
+        <a sec:authorize="hasAnyRole('CONTADOR','ADMINISTRADOR')" th:href="@{/facturas}"><span class="ic">F</span>Facturas</a>
+        <a sec:authorize="hasAnyRole('CONTADOR','ADMINISTRADOR')" th:href="@{/reportes}"><span class="ic">▤</span>Reportes</a>
+        <a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/ajustes}"><span class="ic">⚙</span>Ajustes</a>
+    </div>
+    <p th:replace="~{fragments/base :: pie('P02 Inicio · RF26 RF29 RF34 RF46')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('inicio')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

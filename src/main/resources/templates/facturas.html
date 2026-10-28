@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Facturas')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Facturas', '/inicio')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <h2>Registrar factura emitida en SUNAT (RF42)</h2>
+    <form th:action="@{/facturas}" method="post" class="tarjeta">
+        <label>Cliente (con RUC)</label>
+        <select name="idCliente" required><option th:each="c : ${clientes}" th:value="${c.id()}" th:text="${c.nombreComercial()} + ' · ' + ${c.ruc()}"></option></select>
+        <div class="fila">
+            <div><label>Serie</label><input name="serie" value="E001" maxlength="4" required style="text-transform:uppercase"></div>
+            <div><label>Número</label><input name="numero" type="number" min="1" inputmode="numeric" required></div>
+        </div>
+        <div class="fila">
+            <div><label>Fecha de emisión</label><input name="fecha" type="date" th:value="${hoy}" th:max="${hoy}" required></div>
+            <div><label>Importe S/</label><input name="importe" type="number" step="0.01" min="0.01" inputmode="decimal" required></div>
+        </div>
+        <label class="check"><input type="checkbox" name="detraccion" value="true"> Sujeta a detracción</label>
+        <button class="btn" type="submit">Guardar y asociar ventas</button>
+    </form>
+
+    <h2>Pendientes de facturar (RF44)</h2>
+    <form th:action="@{/facturas}" method="get" class="fila">
+        <input type="month" name="mes" th:value="${mes}">
+        <button class="btn btn-sec" style="margin-top:0" type="submit">Consultar</button>
+    </form>
+    <div class="item" th:each="p : ${pendientes}" style="margin-top:6px"><div><div class="t1" th:text="${p.cliente()}"></div>
+        <div class="t2" th:text="'RUC ' + ${p.ruc()} + ' · ' + ${p.ventas()} + (${p.ventas() == 1} ? ' venta' : ' ventas')"></div></div><span class="v naranja" th:text="${@fmt.soles(p.total())}"></span></div>
+    <p class="ayuda" th:text="${pendientes.isEmpty()} ? 'No hay ventas por facturar' : 'Total por facturar: ' + ${@fmt.soles(totalPendiente)}"></p>
+
+    <h2>Facturas registradas</h2>
+    <p class="ayuda" th:if="${facturas.isEmpty()}">Aún no hay facturas registradas.</p>
+    <a class="item" th:each="f : ${facturas}" th:href="@{/facturas/{id}(id=${f.id()})}">
+        <div><div class="t1" th:text="${f.comprobante()} + ' · ' + ${f.cliente()}"></div>
+            <div class="t2" th:text="${@fmt.fecha(f.fechaEmision())} + ' · asociado ' + ${@fmt.soles(f.asociado())} + (${f.detraccion()} ? ' · detracción' : '')"></div></div>
+        <span class="v" th:classappend="${f.diferencia().signum() != 0} ? 'naranja' : 'verde'" th:text="${@fmt.soles(f.importe())}"></span>
+    </a>
+    <p th:replace="~{fragments/base :: pie('P18 Facturas · RF42 RF44')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('facturas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

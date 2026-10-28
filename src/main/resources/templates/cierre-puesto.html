@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Cierre del puesto')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Cierre del puesto', '/saldo')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <p class="ayuda">Pese lo que sobró de cada producto e ingrese los kilos reales. Si la diferencia con lo esperado supera la tolerancia, indique el motivo (RF27).</p>
+    <form th:action="@{/saldo/cierre}" method="post">
+        <div class="tarjeta" th:each="p : ${productos}" th:with="esp=${esperados.get(p.id())}">
+            <input type="hidden" name="idProducto" th:value="${p.id()}">
+            <div class="item" style="border:0;padding:0;margin:0">
+                <span class="t1" th:text="${p.nombre()}"></span><span class="gris" th:text="'Esperado ' + ${@fmt.kg(esp)}"></span>
+            </div>
+            <div class="fila" style="margin-top:6px">
+                <input name="real" type="number" step="0.01" min="0" inputmode="decimal" placeholder="Kilos reales" th:data-esperado="${@fmt.plano(esp)}" class="kilos-real">
+                <select name="motivo"><option value="">Motivo (si hay diferencia)</option><option>Merma</option><option>Error de pesaje</option><option>Venta no registrada</option><option>Otro</option></select>
+            </div>
+            <div class="t2 gris dif"></div>
+        </div>
+        <div class="total"><span>Saldo para mañana</span><span id="total-cierre">0.00 kg</span></div>
+        <button class="btn" type="submit">Guardar saldo</button>
+    </form>
+    <p th:replace="~{fragments/base :: pie('P13 Cierre del puesto · RF27')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

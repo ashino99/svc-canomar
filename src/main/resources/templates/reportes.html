@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Reportes')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Reportes', '/inicio')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <h2>Cierre mensual (RF45)</h2>
+    <form th:action="@{/reportes}" method="get" class="fila">
+        <input type="month" name="mes" th:value="${mes}">
+        <button class="btn btn-sec" style="margin-top:0" type="submit">Generar</button>
+    </form>
+    <div th:if="${cierre.parcial()}" class="alerta alerta-aviso" style="margin-top:10px">El mes aún no termina: el cierre es parcial.</div>
+    <div th:if="${cierre.diasSinCuadre() > 0}" class="alerta alerta-aviso" th:text="'Hay ' + ${cierre.diasSinCuadre()} + ' días con ventas sin cuadre'"></div>
+    <div class="tabla" style="margin-top:10px"><table>
+        <tr><td>Ventas</td><td class="num" th:text="${@fmt.soles(cierre.ventas())}"></td></tr>
+        <tr><td>Costo de lo vendido</td><td class="num" th:text="${@fmt.soles(cierre.costoVendido())}"></td></tr>
+        <tr><td>Autoconsumo, mermas y desechos</td><td class="num" th:text="${@fmt.soles(cierre.perdidas())}"></td></tr>
+        <tr><td>Gastos menores</td><td class="num" th:text="${@fmt.soles(cierre.gastos())}"></td></tr>
+        <tr><th>Ganancia del mes</th><th class="num" th:text="${@fmt.soles(cierre.ganancia())}"></th></tr>
+        <tr><td>Compras del mes</td><td class="num" th:text="${@fmt.soles(cierre.compras())}"></td></tr>
+        <tr><td>Facturado</td><td class="num" th:text="${@fmt.soles(cierre.facturado())}"></td></tr>
+        <tr><td>Ventas sin factura</td><td class="num" th:text="${@fmt.soles(cierre.noFacturado())}"></td></tr>
+    </table></div>
+    <a class="btn" th:href="@{/reportes/excel/cierre(mes=${mes})}">Exportar cierre a Excel (RF48)</a>
+
+    <h2>Ganancia por producto (RF47)</h2>
+    <form th:action="@{/reportes}" method="get" class="fila">
+        <input type="hidden" name="mes" th:value="${mes}">
+        <div><label>Desde</label><input type="date" name="desde" th:value="${desde}"></div>
+        <div><label>Hasta</label><input type="date" name="hasta" th:value="${hasta}"></div>
+        <button class="btn btn-sec" type="submit" style="grid-column:span 2">Calcular</button>
+    </form>
+    <div class="tabla" style="margin-top:10px"><table>
+        <tr><th>Producto</th><th class="num">Kilos</th><th class="num">Ventas</th><th class="num">Ganancia</th><th class="num">%</th></tr>
+        <tr th:each="p : ${productos}"><td th:text="${p.producto()}"></td><td class="num" th:text="${@fmt.numero(p.kilos())}"></td>
+            <td class="num" th:text="${@fmt.numero(p.ventas())}"></td>
+            <td class="num" th:classappend="${p.ganancia().signum() < 0} ? 'rojo' : 'verde'" th:text="${@fmt.numero(p.ganancia())}"></td>
+            <td class="num" th:text="${p.margen()}"></td></tr>
+    </table></div>
+    <p class="ayuda" th:if="${productos.isEmpty()}">No hay ventas en el periodo.</p>
+    <div class="botones">
+        <a class="btn btn-sec" th:href="@{/reportes/excel/productos(desde=${desde},hasta=${hasta})}">Excel por producto</a>
+        <a class="btn btn-sec" th:href="@{/reportes/excel/ventas(desde=${desde},hasta=${hasta})}">Excel de ventas</a>
+    </div>
+    <p th:replace="~{fragments/base :: pie('P19 Cierre mensual y reportes · RF45 RF47 RF48')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

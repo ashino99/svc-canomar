@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/base :: head('Venta')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Venta ' + ${venta.numero()}, '/ventas')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <div class="tarjeta">
+        <div class="t1" th:text="${venta.cliente()} + ' · ' + (${venta.tipoPago() == 'CREDITO'} ? 'Crédito' : ${@fmt.medio(venta.medioPago())})"></div>
+        <div class="ayuda" th:text="${@fmt.fechaHora(venta.fechaHora())} + ' · registró ' + ${venta.usuario()} + (${venta.esRemate()} ? ' · remate' : '') + (${venta.idFactura() != null} ? ' · facturada' : '')"></div>
+        <div th:if="${venta.anulada()}" class="alerta alerta-error" th:text="'Anulada: ' + ${venta.motivoAnulacion()}"></div>
+    </div>
+    <div class="tabla"><table>
+        <tr><th>Producto</th><th class="num">Kilos</th><th class="num">S/ kg</th><th class="num">Importe</th></tr>
+        <tr th:each="d : ${detalle}"><td th:text="${d.producto()}"></td><td class="num" th:text="${@fmt.numero(d.kilos())}"></td>
+            <td class="num" th:text="${@fmt.numero(d.precioKg())}"></td><td class="num" th:text="${@fmt.numero(d.importe())}"></td></tr>
+    </table></div>
+    <div class="total"><span>Total</span><span th:text="${@fmt.soles(venta.total())}"></span></div>
+
+    <form sec:authorize="hasRole('ADMINISTRADOR')" th:unless="${venta.anulada()}" th:action="@{/ventas/{id}/anular(id=${venta.id()})}" method="post"
+          class="tarjeta" style="margin-top:14px" data-confirmar="¿Anular la venta? Los kilos vuelven al saldo.">
+        <label>Motivo de la anulación (RF20)</label>
+        <input name="motivo" required maxlength="150" placeholder="Ej.: se registró dos veces">
+        <p class="ayuda" th:if="${venta.idFactura() != null}">Esta venta tiene factura: también debe emitir una nota de crédito en SUNAT.</p>
+        <button class="btn btn-rojo" type="submit">Anular venta</button>
+    </form>
+    <p th:replace="~{fragments/base :: pie('P11 Detalle de venta · RF20 RF23')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('vender')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

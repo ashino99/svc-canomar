@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Iniciar sesión')}"></head>
+<body style="padding-bottom:0">
+<main class="login">
+    <div class="form">
+        <div class="logo">C</div>
+        <h1>Canomar</h1>
+        <p>Ventas, créditos y cuadre</p>
+        <div th:if="${error}" class="alerta alerta-error" th:text="${error}"></div>
+        <div th:if="${param.salida}" class="alerta alerta-ok">Sesión cerrada</div>
+        <form th:action="@{/login}" method="post" autocomplete="on">
+            <label for="username">Usuario</label>
+            <input id="username" name="username" autocapitalize="none" autocomplete="username" required autofocus>
+            <label for="password">Contraseña</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+            <button class="btn" type="submit">Ingresar</button>
+        </form>
+        <p style="font-size:13px;margin-top:30px">Si no recuerda su contraseña, pida ayuda al administrador</p>
+    </div>
+    <p th:replace="~{fragments/base :: pie('P01 Iniciar sesión · RF02')}"></p>
+</main>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

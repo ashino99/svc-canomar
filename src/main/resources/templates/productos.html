@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Productos')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Productos', '/mas')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+
+    <th:block th:if="${editando == null}">
+        <h2>Nuevo producto (RF06)</h2>
+        <form th:action="@{/productos}" method="post" class="tarjeta">
+            <label>Nombre</label><input name="nombre" required maxlength="60">
+            <div class="fila">
+                <div><label>Nombre corto</label><input name="nombreCorto" maxlength="20" placeholder="Para la pantalla de venta"></div>
+                <div><label>Categoría</label><select name="categoria">
+                    <option value="PESCADO">Pescado</option><option value="MARISCO">Marisco</option><option value="MOLUSCO">Molusco</option><option value="OTRO">Otro</option></select></div>
+            </div>
+            <button class="btn" type="submit">Guardar</button>
+        </form>
+    </th:block>
+
+    <th:block th:if="${editando != null}">
+        <h2 th:text="'Editar: ' + ${editando.nombre()} + ' (RF07)'">Editar</h2>
+        <form th:action="@{/productos/{id}(id=${editando.id()})}" method="post" class="tarjeta">
+            <label>Nombre</label><input name="nombre" th:value="${editando.nombre()}" required maxlength="60">
+            <div class="fila">
+                <div><label>Nombre corto</label><input name="nombreCorto" th:value="${editando.nombreCorto()}" maxlength="20"></div>
+                <div><label>Categoría</label><select name="categoria">
+                    <option th:each="c : ${ {'PESCADO','MARISCO','MOLUSCO','OTRO'} }" th:value="${c}" th:text="${c}" th:selected="${c == editando.categoria()}"></option></select></div>
+            </div>
+            <label>Estado</label>
+            <select name="estado"><option value="ACTIVO" th:selected="${editando.activo()}">Activo</option>
+                <option value="INACTIVO" th:selected="${!editando.activo()}">Inactivo (temporada)</option></select>
+            <div class="botones"><a class="btn btn-sec" th:href="@{/productos}">Cancelar</a><button class="btn" type="submit">Guardar</button></div>
+        </form>
+    </th:block>
+
+    <h2>Productos (se venden por kilo)</h2>
+    <a class="item" th:each="p : ${productos}" th:href="@{/productos(editar=${p.id()})}">
+        <div><div class="t1" th:text="${p.nombre()}">Bonito</div><div class="t2" th:text="${p.categoria()} + ' · ' + ${p.nombreCorto()}">Pescado</div></div>
+        <span class="v" th:classappend="${p.activo()} ? 'verde' : 'gris'" th:text="${p.activo()} ? 'Activo' : 'Inactivo'">Activo</span>
+    </a>
+    <p th:replace="~{fragments/base :: pie('P05 Productos · RF06 RF07')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>
