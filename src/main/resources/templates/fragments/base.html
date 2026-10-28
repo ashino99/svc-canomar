@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0E3A5B">
+    <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
+    <title th:text="${titulo} + ' · Canomar'">Canomar</title>
+    <link rel="manifest" th:href="@{/manifest.webmanifest}">
+    <link rel="icon" th:href="@{/img/icono-192.png}">
+    <link rel="apple-touch-icon" th:href="@{/img/icono-192.png}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+
+<header th:fragment="barra(titulo, atras)" class="barra">
+    <a th:if="${atras != null}" th:href="@{${atras}}" class="atras" aria-label="Volver">‹</a>
+    <h1 th:text="${titulo}">Título</h1>
+    <button type="button" id="chip-sync" class="chip chip-ok" title="Estado de sincronización (RF26)">Enviado</button>
+</header>
+
+<div th:fragment="mensajes">
+    <div th:if="${ok}" class="alerta alerta-ok" role="status"><b>✓</b> <span th:text="${ok}"></span></div>
+    <div th:if="${aviso}" class="alerta alerta-aviso" role="status"><b>!</b> <span th:text="${aviso}"></span></div>
+    <div th:if="${error}" class="alerta alerta-error" role="alert"><b>!</b> <span th:text="${error}"></span></div>
+</div>
+
+<p th:fragment="pie(rotulo)" class="rotulo" th:text="${rotulo}">P00 · RF00</p>
+
+<nav th:fragment="nav(activo)" class="nav-inferior">
+    <a th:href="@{/inicio}" th:classappend="${activo == 'inicio'} ? 'activo'"><span class="ic">⌂</span>Inicio</a>
+    <a sec:authorize="hasAnyRole('VENDEDOR','ADMINISTRADOR')" th:href="@{/vender}" th:classappend="${activo == 'vender'} ? 'activo'"><span class="ic">S/</span>Vender</a>
+    <a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/cobranza}" th:classappend="${activo == 'cobranza'} ? 'activo'"><span class="ic">!</span>Cobranza</a>
+    <a sec:authorize="hasRole('CONTADOR')" th:href="@{/facturas}" th:classappend="${activo == 'facturas'} ? 'activo'"><span class="ic">F</span>Facturas</a>
+    <a th:href="@{/mas}" th:classappend="${activo == 'mas'} ? 'activo'"><span class="ic">≡</span>Más</a>
+</nav>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/js/app.js}"></script>
+</th:block>
+
+</body>
+</html>

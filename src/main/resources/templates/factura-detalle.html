@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Factura')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra(${factura.comprobante()}, '/facturas')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <div class="kpis">
+        <div class="kpi"><small>Importe</small><b th:text="${@fmt.soles(factura.importe())}"></b></div>
+        <div class="kpi"><small>Asociado</small><b th:text="${@fmt.soles(factura.asociado())}"></b></div>
+        <div class="kpi"><small>Diferencia</small><b th:classappend="${factura.diferencia().signum() != 0} ? 'rojo' : 'verde'" th:text="${@fmt.soles(factura.diferencia())}"></b></div>
+    </div>
+    <p class="ayuda" th:text="${factura.cliente()} + ' · emitida el ' + ${@fmt.fecha(factura.fechaEmision())}"></p>
+    <h2>Asociar ventas pendientes (RF43)</h2>
+    <form th:action="@{/facturas/{id}/asociar(id=${factura.id()})}" method="post">
+        <label class="item check" th:each="v : ${ventas}" style="font-weight:400">
+            <input type="checkbox" name="venta" th:value="${v.id()}" class="venta-factura" th:data-total="${@fmt.plano(v.total())}">
+            <span style="flex:1" th:text="${@fmt.fecha(v.fechaHora().toLocalDate())} + ' · Venta ' + ${v.numero()} + ' · ' + (${v.tipoPago() == 'CREDITO'} ? 'Crédito' : 'Contado')"></span>
+            <b th:text="${@fmt.soles(v.total())}"></b>
+        </label>
+        <p class="ayuda" th:if="${ventas.isEmpty()}">El cliente no tiene ventas pendientes de facturar.</p>
+        <div class="total"><span>Seleccionado</span><span id="suma-factura">S/ 0.00</span></div>
+        <button class="btn" type="submit" th:disabled="${ventas.isEmpty()}">Asociar ventas</button>
+    </form>
+    <p th:replace="~{fragments/base :: pie('P18 Detalle de factura · RF43')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('facturas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

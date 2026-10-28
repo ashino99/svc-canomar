@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Respaldo y bitácora')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Respaldo y bitácora', '/mas')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <h2>Respaldo (RF49)</h2>
+    <div class="tarjeta">
+        <p class="ayuda">Descarga un archivo .sql con todos los datos. Guárdelo en otro lugar (USB o la nube).</p>
+        <a class="btn" th:href="@{/ajustes/respaldo}">Generar respaldo ahora</a>
+    </div>
+    <h2>Bitácora (RF50)</h2>
+    <form th:action="@{/ajustes}" method="get" class="tarjeta">
+        <div class="fila">
+            <div><label>Usuario</label><select name="usuario"><option value="">Todos</option>
+                <option th:each="u : ${usuarios}" th:value="${u.id()}" th:text="${u.usuario()}" th:selected="${fUsuario == u.id()}"></option></select></div>
+            <div><label>Operación</label><select name="operacion"><option value="">Todas</option>
+                <option th:each="o : ${operaciones}" th:value="${o}" th:text="${o}" th:selected="${o == fOperacion}"></option></select></div>
+        </div>
+        <div class="fila">
+            <div><label>Desde</label><input type="date" name="desde" th:value="${desde}"></div>
+            <div><label>Hasta</label><input type="date" name="hasta" th:value="${hasta}"></div>
+        </div>
+        <button class="btn btn-sec" type="submit">Filtrar</button>
+    </form>
+    <div class="item" th:each="e : ${eventos}">
+        <div><div class="t1" th:text="${@fmt.hora(e.fechaHora())} + ' · ' + ${e.usuario()}"></div><div class="t2" th:text="${e.detalle()}"></div></div>
+        <span class="v gris" style="font-size:12px" th:text="${e.operacion()}"></span>
+    </div>
+    <p class="ayuda" th:if="${eventos.isEmpty()}">No hay eventos con ese filtro.</p>
+    <p th:replace="~{fragments/base :: pie('P20 Respaldo y bitácora · RF49 RF50')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

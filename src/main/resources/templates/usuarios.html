@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Usuarios')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Usuarios', '/mas')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <h2>Nuevo usuario (RF01)</h2>
+    <form th:action="@{/usuarios}" method="post" class="tarjeta">
+        <label>Nombre</label><input name="nombre" required maxlength="100">
+        <div class="fila">
+            <div><label>Usuario</label><input name="usuario" autocapitalize="none" required maxlength="30"></div>
+            <div><label>Rol</label>
+                <select name="rol"><option value="VENDEDOR">Vendedor</option><option value="ADMINISTRADOR">Administrador</option><option value="CONTADOR">Contador</option></select></div>
+        </div>
+        <label>Contraseña inicial (mínimo 8)</label><input type="password" name="clave" minlength="8" required autocomplete="new-password">
+        <button class="btn" type="submit">Guardar</button>
+    </form>
+
+    <h2>Usuarios registrados</h2>
+    <div class="item" th:each="u : ${usuarios}">
+        <div>
+            <div class="t1" th:text="${u.usuario()}">usuario</div>
+            <div class="t2" th:text="${u.nombreCompleto()} + ' · ' + ${u.rol()}">rol</div>
+        </div>
+        <form th:if="${u.activo()}" th:action="@{/usuarios/{id}/desactivar(id=${u.id()})}" method="post" data-confirmar="¿Desactivar al usuario? Sus registros se conservan.">
+            <button class="btn btn-chico btn-sec rojo" type="submit">Desactivar</button>
+        </form>
+        <form th:unless="${u.activo()}" th:action="@{/usuarios/{id}/activar(id=${u.id()})}" method="post">
+            <button class="btn btn-chico btn-sec" type="submit">Activar</button>
+        </form>
+    </div>
+    <p th:replace="~{fragments/base :: pie('P03 Usuarios · RF01 RF05')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

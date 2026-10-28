@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Cobranza')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Cobranza', '/inicio')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <div class="kpis">
+        <div class="kpi"><small>Por cobrar</small><b th:text="${@fmt.soles(porCobrar)}"></b></div>
+        <div class="kpi"><small>Vencido (RF34)</small><b class="rojo" th:text="${@fmt.soles(vencido)}"></b></div>
+    </div>
+    <h2>Clientes por cobrar</h2>
+    <a class="item" th:each="s : ${saldos}" th:href="@{/cobranza/{id}(id=${s.idCliente()})}">
+        <div><div class="t1" th:text="${s.nombre()}"></div>
+            <div class="t2" th:text="(${s.conVencido()} ? 'Vencido ' + ${@fmt.soles(s.vencido())} : 'Al día') + (${s.sobreLimite()} ? ' · sobre su límite' : '') + (${s.ventaMasAntigua() != null} ? ' · desde ' + ${@fmt.fecha(s.ventaMasAntigua())} : '')"></div></div>
+        <span class="v" th:classappend="${s.conVencido()} ? 'rojo'" th:text="${@fmt.soles(s.saldo())}"></span>
+    </a>
+    <p class="ayuda" th:if="${saldos.isEmpty()}">Ningún cliente tiene deuda.</p>
+
+    <h2>Compromisos de pago (RF35)</h2>
+    <div class="item" th:each="c : ${compromisos}">
+        <div><div class="t1" th:text="${c.cliente()}"></div><div class="t2" th:text="'Para el ' + ${@fmt.fecha(c.fecha())}"></div></div>
+        <span class="v" th:classappend="${c.estado() == 'INCUMPLIDO'} ? 'rojo' : 'naranja'" th:text="${@fmt.soles(c.monto())} + ' · ' + ${c.estado()}"></span>
+    </div>
+    <p class="ayuda" th:if="${compromisos.isEmpty()}">No hay compromisos pendientes.</p>
+    <p th:replace="~{fragments/base :: pie('P14 Cobranza · RF34 RF35')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('cobranza')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

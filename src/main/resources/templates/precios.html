@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Precios del día')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Precios del día', '/inicio')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <p class="ayuda">Costo promedio = (saldo anterior + compra de hoy) ÷ kilos. Ingrese el precio de venta de hoy (RF15).</p>
+    <form th:action="@{/precios}" method="post">
+        <div class="tarjeta" th:each="p : ${precios}">
+            <div class="item" style="border:0;padding:0;margin:0">
+                <div><div class="t1" th:text="${p.producto()}"></div>
+                    <div class="t2" th:text="'Costo ' + (${p.costoKg() != null} ? ${@fmt.soles(p.costoKg())} : '—') + ' · anterior ' + (${p.precioAnterior() != null} ? ${@fmt.soles(p.precioAnterior())} : '—') + ' · saldo ' + ${@fmt.kg(p.kilosDisponibles())}"></div></div>
+                <span class="v" th:classappend="${p.agotado()} ? 'rojo' : (${p.precioHoy() == null} ? 'naranja' : 'verde')"
+                      th:text="${p.agotado()} ? 'Agotado' : (${p.precioHoy() == null} ? (${p.precioAnterior() != null} ? 'Sugerido: precio de ayer' : 'Sin precio hoy') : 'Hoy ' + ${@fmt.soles(p.precioHoy())})"></span>
+            </div>
+            <input type="hidden" name="idProducto" th:value="${p.idProducto()}">
+            <input name="precio" type="number" step="0.01" min="0.01" inputmode="decimal" th:value="${@fmt.plano(p.precioSugerido())}"
+                   th:data-costo="${@fmt.plano(p.costoKg())}" class="precio-dia" placeholder="Precio de hoy S/ por kg" style="margin-top:8px">
+        </div>
+        <button class="btn" type="submit">Guardar precios</button>
+    </form>
+    <form th:action="@{/precios/ayer}" method="post"><button class="btn btn-sec" type="submit">Usar los precios de ayer</button></form>
+    <p th:replace="~{fragments/base :: pie('P09 Precios del día · RF15 RF16')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

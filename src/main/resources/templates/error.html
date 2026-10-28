@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error · Canomar</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header class="barra"><a class="atras" th:href="@{/inicio}">‹</a><h1>Algo salió mal</h1></header>
+<main class="contenido">
+    <div class="alerta alerta-error" th:text="${status == 404} ? 'La página no existe.' : 'Ocurrió un error inesperado. Intente de nuevo; si continúa, avise al administrador.'"></div>
+    <a class="btn" th:href="@{/inicio}">Volver al inicio</a>
+</main>
+</body>
+</html>
