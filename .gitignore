@@ -1,0 +1,15 @@
+target/
+logs/
+*.log
+.idea/
+*.iml
+.vscode/
+.DS_Store
+# Credenciales locales: no subir contraseñas
+application-local.properties
+# Variables de entorno con claves
+.env
+*.env
+# Anexo confidencial de las propuestas con hardware (solo se entrega por UTP+Class)
+docs/confidencial/
+*_Confidencial*.pdf
