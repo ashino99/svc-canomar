@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/base :: head('Gastos y cuadre')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Gastos y cuadre', '/inicio')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <h2>Gasto del día (RF38)</h2>
+    <form th:action="@{/cuadre/gasto}" method="post" class="tarjeta">
+        <div class="fila">
+            <div><label>Concepto</label><select name="concepto"><option value="HIELO">Hielo</option><option value="BOLSAS">Bolsas</option><option value="MOVILIDAD">Movilidad</option>
+                <option value="ESTIBA">Estiba</option><option value="ESPACIO">Pago del espacio</option><option value="OTRO">Otro</option></select></div>
+            <div><label>Monto S/</label><input name="monto" type="number" step="0.01" min="0.01" inputmode="decimal" required></div>
+        </div>
+        <div class="fila">
+            <div><label>Descripción (si es Otro)</label><input name="descripcion" maxlength="100"></div>
+            <div><label>Medio</label><select name="medio"><option value="EFECTIVO">Efectivo</option><option value="YAPE">Yape/Plin</option><option value="TRANSFERENCIA">Transferencia</option></select></div>
+        </div>
+        <button class="btn" type="submit">Registrar gasto</button>
+    </form>
+    <div class="item" th:each="g : ${gastos}"><div><div class="t1" th:text="${g.concepto()} + (${g.descripcion() != null} ? ' · ' + ${g.descripcion()} : '')"></div>
+        <div class="t2" th:text="${@fmt.medio(g.medio())} + ' · ' + ${g.usuario()}"></div></div><span class="v" th:text="${@fmt.soles(g.monto())}"></span></div>
+    <p class="ayuda" th:text="'Gastos de hoy: ' + ${@fmt.soles(totalGastos)}"></p>
+
+    <th:block sec:authorize="hasRole('ADMINISTRADOR')">
+        <h2 th:text="'Cuadre de caja · ' + ${@fmt.fecha(hoy)} + ' (RF39)'"></h2>
+        <div class="tabla"><table>
+            <tr><th>Concepto</th><th class="num">Efectivo</th><th class="num">Yape/transf.</th></tr>
+            <tr><td>Ventas al contado</td><td class="num" th:text="${@fmt.numero(mov.ventasEfectivo())}"></td><td class="num" th:text="${@fmt.numero(mov.ventasDigital())}"></td></tr>
+            <tr><td>+ Abonos de clientes</td><td class="num" th:text="${@fmt.numero(mov.abonosEfectivo())}"></td><td class="num" th:text="${@fmt.numero(mov.abonosDigital())}"></td></tr>
+            <tr><td>− Gastos</td><td class="num" th:text="${@fmt.numero(mov.gastosEfectivo())}"></td><td class="num" th:text="${@fmt.numero(mov.gastosDigital())}"></td></tr>
+            <tr><td>− Pagos a proveedores</td><td class="num" th:text="${@fmt.numero(mov.pagosEfectivo())}"></td><td class="num" th:text="${@fmt.numero(mov.pagosDigital())}"></td></tr>
+            <tr><th>Esperado</th><th class="num" th:text="${@fmt.numero(mov.efectivoEsperado())}"></th><th class="num" th:text="${@fmt.numero(mov.digitalEsperado())}"></th></tr>
+        </table></div>
+        <div th:if="${cuadre != null}" class="alerta alerta-ok">
+            <b>Día cuadrado</b> · contado <span th:text="${@fmt.soles(cuadre.efectivoContado())}"></span> · diferencia
+            <span th:text="${@fmt.soles(cuadre.diferenciaEfectivo())}"></span> · ganancia <span th:text="${@fmt.soles(cuadre.ganancia())}"></span>
+            <span th:if="${cuadre.motivo() != null}" th:text="' · ' + ${cuadre.motivo()}"></span>
+        </div>
+        <form th:if="${cuadre == null}" th:action="@{/cuadre}" method="post" class="tarjeta" id="form-cuadre">
+            <div class="fila">
+                <div><label>Efectivo contado S/</label><input name="efectivo" type="number" step="0.01" min="0" inputmode="decimal" required></div>
+                <div><label>Digital revisado S/</label><input name="digital" type="number" step="0.01" min="0" inputmode="decimal" required></div>
+            </div>
+            <label>Motivo de la diferencia (si la hay)</label><input name="motivo" maxlength="150" placeholder="Ej.: vuelto mal dado">
+            <button class="btn" type="submit">Guardar cuadre</button>
+        </form>
+        <a class="btn btn-sec" th:href="@{/ganancia}">Ganancia del día ›</a>
+    </th:block>
+    <p th:replace="~{fragments/base :: pie('P16 Gastos y cuadre · RF38 RF39')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Proveedores')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Proveedores', '/compras/nueva')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <div class="kpis"><div class="kpi"><small>Deuda total con proveedores</small><b class="rojo" th:text="${@fmt.soles(deudaTotal)}"></b></div></div>
+
+    <h2>Deudas por proveedor (RF14)</h2>
+    <form th:action="@{/proveedores}" method="get" class="fila">
+        <select name="proveedor"><option value="">Todos los proveedores</option>
+            <option th:each="p : ${proveedores}" th:value="${p.id()}" th:text="${p.nombre()}" th:selected="${filtro == p.id()}"></option></select>
+        <button class="btn btn-sec" style="margin-top:0" type="submit">Filtrar</button>
+    </form>
+    <div class="item" th:each="d : ${deudas}">
+        <div><div class="t1" th:text="${d.proveedor()}"></div>
+            <div class="t2" th:text="${d.tipo()} + (${d.compraMasAntigua() != null} ? ' · compra más antigua ' + ${@fmt.fecha(d.compraMasAntigua())} : '')"></div></div>
+        <span class="v" th:classappend="${d.deuda().signum() > 0} ? 'rojo' : 'verde'" th:text="${@fmt.soles(d.deuda())}"></span>
+    </div>
+    <p class="ayuda" th:if="${deudas.isEmpty()}">No tiene deudas con proveedores.</p>
+
+    <h2>Registrar pago (RF13)</h2>
+    <form th:action="@{/proveedores/pago}" method="post" class="tarjeta">
+        <label>Proveedor</label><select name="idProveedor" required>
+            <option th:each="d : ${deudas}" th:if="${d.deuda().signum() > 0}" th:value="${d.idProveedor()}" th:text="${d.proveedor()} + ' · debe ' + ${@fmt.soles(d.deuda())}"></option></select>
+        <div class="fila">
+            <div><label>Monto S/</label><input name="monto" type="number" step="0.01" min="0.01" inputmode="decimal" required></div>
+            <div><label>Medio</label><select name="medio"><option value="EFECTIVO">Efectivo</option><option value="YAPE">Yape/Plin</option><option value="TRANSFERENCIA">Transferencia</option></select></div>
+        </div>
+        <button class="btn" type="submit">Registrar pago</button>
+    </form>
+
+    <h2>Pagos recientes</h2>
+    <div class="item" th:each="p : ${pagos}"><div><div class="t1" th:text="${p.proveedor()}"></div><div class="t2" th:text="${@fmt.fecha(p.fecha())} + ' · ' + ${@fmt.medio(p.medio())}"></div></div>
+        <span class="v" th:text="${@fmt.soles(p.monto())}"></span></div>
+
+    <details class="tarjeta"><summary>+ Nuevo proveedor (RF10)</summary>
+        <form th:action="@{/proveedores}" method="post">
+            <label>Nombre</label><input name="nombre" required maxlength="100">
+            <div class="fila">
+                <div><label>RUC (opcional)</label><input name="ruc" inputmode="numeric" pattern="\d{11}" maxlength="11"></div>
+                <div><label>Tipo</label><select name="tipo"><option value="PRINCIPAL">Principal</option><option value="OCASIONAL">Ocasional (terminal)</option></select></div>
+            </div>
+            <label>Teléfono</label><input name="telefono" inputmode="tel" maxlength="15">
+            <button class="btn" type="submit">Guardar proveedor</button>
+        </form>
+    </details>
+    <p th:replace="~{fragments/base :: pie('P07 Proveedores y deudas · RF10 RF13 RF14')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

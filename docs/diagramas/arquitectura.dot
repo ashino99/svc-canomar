@@ -1,0 +1,18 @@
+digraph A { rankdir=TB; nodesep=0.5; ranksep=0.42; bgcolor="white";
+node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, width=6.3, margin="0.18,0.10"]; edge [fontname="Arial", fontsize=10, color="#37474F"];
+vista [label=<<b>VISTA (navegador del celular o PC)</b><br/><font point-size="10">Thymeleaf 3 · HTML5 · CSS · JavaScript<br/>PWA: manifest + service worker + cola en localStorage<br/>templates/*.html · static/js/app.js, vender.js</font>>, fillcolor="#DCEBFA"];
+seg [label=<<b>SEGURIDAD (filtro previo)</b><br/><font point-size="10">Spring Security 6: sesión, BCrypt, roles, CSRF,<br/>bloqueo tras 5 intentos · config/SecurityConfig, seguridad/*</font>>, fillcolor="#FDECEA"];
+ctl [label=<<b>CONTROLADOR</b><br/><font point-size="10">Spring MVC @Controller / @RestController<br/>web/VentaController, CobranzaController, VentaApiController…<br/>ManejadorGlobal: mensajes de error y confirmaciones</font>>, fillcolor="#E8F5E9"];
+srv [label=<<b>SERVICIO (reglas del negocio)</b><br/><font point-size="10">Interfaces servicio/*Service + servicio/impl/*ServiceImpl<br/>@Transactional · comun/Calculos (FIFO, importe, ganancia)<br/>Guava Preconditions/ImmutableList · Commons Lang3</font>>, fillcolor="#FFF6DB"];
+dao [label=<<b>DAO (acceso a datos)</b><br/><font point-size="10">Interfaces dao/*Dao + dao/jdbc/Jdbc*Dao<br/>Spring JdbcTemplate con parámetros (?) · HikariCP</font>>, fillcolor="#EDE7F6"];
+bd [label=<<b>BASE DE DATOS</b><br/><font point-size="10">MySQL 8 · svc_canomar<br/>20 tablas en 3FN + 2 vistas (v_venta_total, v_saldo_cliente)<br/>schema.sql y data.sql</font>>, fillcolor="#E0F2F1"];
+lib [shape=box, style="rounded,filled,dashed", fillcolor="#F5F5F5", width=2.6, label=<<b>Librerías de apoyo</b><br/><font point-size="10">Logback (bitácora en archivo)<br/>Apache POI (Excel, RF48)<br/>OpenPDF (estado de cuenta, RF37)</font>>];
+vista -> seg [label="  1. POST /vender (formulario + token CSRF)", penwidth=1.4];
+seg -> ctl [label="  2. usuario autenticado y con rol permitido", penwidth=1.4];
+ctl -> srv [label="  3. ventaService.registrar(NuevaVenta)", penwidth=1.4];
+srv -> dao [label="  4. clienteDao.buscar · loteDao.descontar · ventaDao.insertarVenta", penwidth=1.4];
+dao -> bd [label="  5. INSERT / SELECT con parámetros", penwidth=1.4];
+bd -> dao [label="  6. filas", style=dashed, constraint=false]; dao -> srv [style=dashed, constraint=false, label="  7. VentaVista"]; 
+srv -> ctl [style=dashed, constraint=false, label="  8. resultado o NegocioException"]; ctl -> vista [style=dashed, constraint=false, label="  9. redirect + mensaje"];
+srv -> lib [style=dotted, arrowhead=open]; {rank=same; srv; lib}
+}

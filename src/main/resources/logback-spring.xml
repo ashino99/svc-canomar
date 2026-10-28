@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Logback: registro de eventos en consola y en archivo diario (logs/svc-canomar.log) -->
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="LOG_DIR" value="logs"/>
+
+    <appender name="CONSOLA" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level [%thread] %logger{30} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ARCHIVO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/svc-canomar.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/svc-canomar.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{40} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="pe.canomar.svc" level="INFO"/>
+    <logger name="org.springframework.security" level="WARN"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLA"/>
+        <appender-ref ref="ARCHIVO"/>
+    </root>
+</configuration>

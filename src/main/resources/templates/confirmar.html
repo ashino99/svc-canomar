@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Confirmar')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Confirmar', ${volver})}"></header>
+<main class="contenido">
+    <div class="alerta alerta-aviso"><b>!</b> <span th:text="${mensaje}"></span></div>
+    <form th:action="@{${accion}}" method="post">
+        <input type="hidden" th:each="c : ${campos}" th:name="${c.nombre()}" th:value="${c.valor()}">
+        <input type="hidden" name="_volver" th:value="${volver}">
+        <input type="hidden" name="confirmado" value="true">
+        <div class="botones">
+            <a class="btn btn-sec" th:href="@{${volver}}">Cancelar</a>
+            <button class="btn" type="submit">Confirmar</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

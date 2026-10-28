@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Cobranza')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra(${cliente.nombreComercial()}, '/cobranza')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <div class="kpis">
+        <div class="kpi"><small>Saldo</small><b class="rojo" th:text="${@fmt.soles(saldo.saldo())}"></b></div>
+        <div class="kpi"><small>Vencido</small><b th:classappend="${saldo.conVencido()} ? 'rojo'" th:text="${@fmt.soles(saldo.vencido())}"></b></div>
+        <div class="kpi"><small>Disponible</small><b th:text="${@fmt.soles(saldo.disponible())}"></b></div>
+    </div>
+
+    <h2>Registrar abono (RF31)</h2>
+    <form th:action="@{/cobranza/{id}/abono(id=${cliente.id()})}" method="post" class="tarjeta">
+        <div class="fila">
+            <div><label>Monto S/</label><input name="monto" type="number" step="0.01" min="0.01" inputmode="decimal" required></div>
+            <div><label>Medio</label><select name="medio"><option value="YAPE">Yape/Plin</option><option value="EFECTIVO">Efectivo</option><option value="TRANSFERENCIA">Transferencia</option></select></div>
+        </div>
+        <p class="ayuda">El abono se aplica primero a las ventas más antiguas.</p>
+        <button class="btn" type="submit">Registrar abono</button>
+    </form>
+
+    <h2>Antigüedad de la deuda (RF33)</h2>
+    <div class="tabla"><table>
+        <tr><th>Tramo</th><th class="num">Ventas</th><th class="num">Monto</th></tr>
+        <tr th:each="a : ${antiguedad}"><td th:text="${a.tramo()}"></td><td class="num" th:text="${a.ventas()}"></td>
+            <td class="num" th:classappend="${a.monto().signum() > 0 and a.tramo() != '0–7 días'} ? 'rojo'" th:text="${@fmt.numero(a.monto())}"></td></tr>
+    </table></div>
+
+    <h2>Compromiso de pago (RF35)</h2>
+    <form th:action="@{/cobranza/{id}/compromiso(id=${cliente.id()})}" method="post" class="tarjeta">
+        <div class="fila">
+            <div><label>Fecha</label><input name="fecha" type="date" th:min="${hoy}" required></div>
+            <div><label>Monto S/</label><input name="monto" type="number" step="0.01" min="0.01" inputmode="decimal" required></div>
+        </div>
+        <button class="btn" type="submit">Guardar compromiso</button>
+    </form>
+
+    <a class="btn btn-sec" th:href="@{/cobranza/{id}/estado(id=${cliente.id()})}">Estado de cuenta (RF36) ›</a>
+    <p th:replace="~{fragments/base :: pie('P14 Cobranza del cliente · RF31 RF33 RF35')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('cobranza')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

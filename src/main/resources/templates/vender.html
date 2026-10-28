@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Vender')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra(${remate} ? 'Remate' : 'Vender', '/inicio')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <div id="aviso-offline" class="alerta alerta-aviso oculto"><b>!</b> Sin conexión: las ventas se guardan en el celular y se envían solas al volver la señal (RF24).</div>
+    <p class="ayuda" th:if="${remate}">Remate: venta de mercadería antigua a precio menor que el del día. Se descuenta primero el saldo más antiguo (RF21).</p>
+
+    <form th:action="@{/vender}" method="post" id="form-venta" th:data-remate="${remate}">
+        <input type="hidden" name="uuid" id="uuid">
+        <input type="hidden" name="remate" th:value="${remate}">
+
+        <!-- Productos con el precio del día (RF16) -->
+        <div class="chips" id="productos">
+            <button type="button" th:each="p : ${precios}" th:disabled="${p.precioSugerido() == null}"
+                    th:data-id="${p.idProducto()}" th:data-nombre="${p.producto()}" th:data-precio="${@fmt.plano(p.precioSugerido())}" th:data-kilos="${@fmt.plano(p.kilosDisponibles())}"
+                    th:classappend="${p.kilosDisponibles() == null or p.kilosDisponibles().signum() <= 0} ? 'agotado'"
+                    th:text="${p.nombreCorto()} + ' ' + (${p.precioSugerido() != null} ? ${@fmt.plano(p.precioSugerido())} : '—') + (${p.kilosDisponibles() == null or p.kilosDisponibles().signum() <= 0} ? ' · sin saldo' : '')">Bonito 9.00</button>
+        </div>
+        <p class="ayuda">Toque un producto e ingrese los kilos de la balanza: el importe se calcula solo (RF19).</p>
+
+        <div id="lineas"></div>
+        <template id="tpl-linea">
+            <div class="linea-venta">
+                <div><b class="nombre"></b><div class="t2 importe gris">S/ 0.00</div></div>
+                <input type="hidden" name="idProducto">
+                <input name="kilos" type="number" step="0.01" min="0.01" inputmode="decimal" placeholder="kg" required aria-label="Kilos">
+                <input name="precio" type="number" step="0.01" min="0.01" inputmode="decimal" placeholder="S/ kg" required aria-label="Precio por kilo">
+                <button type="button" class="quitar" aria-label="Quitar">×</button>
+            </div>
+        </template>
+
+        <div class="segmento" th:unless="${remate}">
+            <input type="radio" name="tipo" id="t-contado" value="CONTADO" checked><label for="t-contado">Público</label>
+            <input type="radio" name="tipo" id="t-credito" value="CREDITO"><label for="t-credito">Restaurante (crédito)</label>
+        </div>
+        <input type="hidden" name="tipo" value="CONTADO" th:if="${remate}">
+
+        <div id="bloque-medio">
+            <label>Medio de pago</label>
+            <select name="medio"><option value="EFECTIVO">Efectivo</option><option value="YAPE">Yape/Plin</option><option value="TRANSFERENCIA">Transferencia</option></select>
+        </div>
+        <div id="bloque-cliente" class="oculto">
+            <label>Restaurante (RF18)</label>
+            <select name="idCliente" id="cliente">
+                <option value="">Elija el restaurante…</option>
+                <option th:each="c : ${clientes}" th:value="${c.id()}"
+                        th:with="s=${saldos.get(c.id())}"
+                        th:text="${c.nombreComercial()} + ' · disponible ' + (${s != null} ? ${@fmt.soles(s.disponible())} : ${@fmt.soles(c.limiteCredito())})"></option>
+            </select>
+        </div>
+
+        <div class="total"><span>Total</span><span id="total">S/ 0.00</span></div>
+        <div class="botones">
+            <a class="btn btn-sec" th:href="${remate} ? @{/vender} : @{/vender(remate=true)}" th:text="${remate} ? 'Venta normal' : 'Remate'">Remate</a>
+            <button class="btn" type="submit" id="btn-registrar">Registrar</button>
+        </div>
+    </form>
+    <a class="btn btn-sec" th:href="@{/ventas}">Ventas del día ›</a>
+    <p th:replace="~{fragments/base :: pie('P10 Vender · RF16 RF17 RF18 RF19 RF21 RF24 RF25')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('vender')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+<script th:src="@{/js/vender.js}"></script>
+</body>
+</html>

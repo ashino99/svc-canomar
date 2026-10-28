@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Estado de cuenta')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Estado de cuenta', '/cobranza/' + ${estado.cliente().id()})}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <h2 th:text="${estado.cliente().nombreComercial()}"></h2>
+    <form th:action="@{/cobranza/{id}/estado(id=${estado.cliente().id()})}" method="get" class="fila">
+        <div><label>Desde</label><input type="date" name="desde" th:value="${estado.desde()}"></div>
+        <div><label>Hasta</label><input type="date" name="hasta" th:value="${estado.hasta()}"></div>
+        <button class="btn btn-sec" type="submit" style="grid-column:span 2">Generar</button>
+    </form>
+    <div class="tabla" style="margin-top:10px"><table>
+        <tr><th>Fecha</th><th>Detalle</th><th class="num">Cargo</th><th class="num">Abono</th><th class="num">Saldo</th></tr>
+        <tr><td></td><td><b>Saldo inicial</b></td><td></td><td></td><td class="num"><b th:text="${@fmt.numero(estado.saldoInicial())}"></b></td></tr>
+        <tr th:each="m : ${estado.movimientos()}">
+            <td th:text="${@fmt.fecha(m.fecha().toLocalDate())}"></td><td th:text="${m.descripcion()}"></td>
+            <td class="num" th:text="${@fmt.numero(m.cargo())}"></td><td class="num verde" th:text="${@fmt.numero(m.abono())}"></td>
+            <td class="num" th:text="${@fmt.numero(m.saldo())}"></td></tr>
+    </table></div>
+    <p class="ayuda" th:if="${estado.movimientos().isEmpty()}">Sin movimientos en el periodo.</p>
+    <div class="total"><span th:text="'Saldo al ' + ${@fmt.fecha(estado.hasta())}"></span><span th:text="${@fmt.soles(estado.saldoFinal())}"></span></div>
+    <div class="botones">
+        <a class="btn btn-sec" id="pdf-estado" th:href="@{/cobranza/{id}/estado.pdf(id=${estado.cliente().id()},desde=${estado.desde()},hasta=${estado.hasta()})}" target="_blank">Descargar PDF</a>
+        <button class="btn" type="button" id="compartir-estado" th:data-url="@{/cobranza/{id}/estado.pdf(id=${estado.cliente().id()},desde=${estado.desde()},hasta=${estado.hasta()})}" th:data-nombre="${'EstadoCuenta_' + estado.hasta() + '.pdf'}">Compartir (RF37)</button>
+    </div>
+    <p th:replace="~{fragments/base :: pie('P15 Estado de cuenta · RF36 RF37')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('cobranza')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

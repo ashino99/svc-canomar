@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Sin permiso')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Sin permiso', '/inicio')}"></header>
+<main class="contenido">
+    <div class="alerta alerta-error"><b>!</b> Su rol no permite usar esta opción. Si la necesita, pida ayuda al administrador.</div>
+    <a class="btn" th:href="@{/inicio}">Volver al inicio</a>
+</main>
+<nav th:replace="~{fragments/base :: nav('')}"></nav>
+</body>
+</html>

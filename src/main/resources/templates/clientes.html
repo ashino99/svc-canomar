@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/base :: head('Clientes')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Clientes', '/inicio')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <input type="search" id="buscar" placeholder="Buscar restaurante…" data-filtra=".cliente-item" aria-label="Buscar cliente">
+
+    <h2>Saldo por cliente (RF32)</h2>
+    <a class="item cliente-item" th:each="s : ${saldos}" th:href="@{/clientes/{id}(id=${s.idCliente()})}">
+        <div>
+            <div class="t1" th:text="${s.nombre()}">Cliente</div>
+            <div class="t2" th:text="'Límite ' + ${@fmt.soles(s.limite())} + ' · plazo ' + ${s.plazoDias()} + ' días' + (${s.conVencido()} ? ' · vencido ' + ${@fmt.soles(s.vencido())} : '')">límite</div>
+        </div>
+        <span class="v" th:classappend="${s.conVencido() or s.sobreLimite()} ? 'rojo'" th:text="${@fmt.soles(s.saldo())}">S/ 0</span>
+    </a>
+
+    <th:block sec:authorize="hasRole('ADMINISTRADOR')">
+        <th:block th:if="${editando == null}">
+            <h2>Nuevo cliente (RF08)</h2>
+            <form th:action="@{/clientes}" method="post" class="tarjeta">
+                <label>Nombre comercial</label><input name="nombre" required maxlength="100">
+                <div class="fila">
+                    <div><label>RUC (opcional)</label><input name="ruc" inputmode="numeric" pattern="\d{11}" maxlength="11"></div>
+                    <div><label>Teléfono</label><input name="telefono" inputmode="tel" maxlength="15"></div>
+                </div>
+                <div class="fila">
+                    <div><label>Límite de crédito S/</label><input name="limite" type="number" step="0.01" min="0" value="0" required></div>
+                    <div><label>Plazo (días)</label><input name="plazo" type="number" min="0" max="90" value="7" required></div>
+                </div>
+                <p class="ayuda">Con límite 0 el cliente solo compra al contado.</p>
+                <button class="btn" type="submit">Guardar</button>
+            </form>
+        </th:block>
+        <th:block th:if="${editando != null}">
+            <h2 th:text="'Editar: ' + ${editando.nombreComercial()} + ' (RF09)'">Editar</h2>
+            <form th:action="@{/clientes/{id}(id=${editando.id()})}" method="post" class="tarjeta">
+                <label>Nombre comercial</label><input name="nombre" th:value="${editando.nombreComercial()}" required>
+                <div class="fila">
+                    <div><label>RUC</label><input name="ruc" th:value="${editando.ruc()}" inputmode="numeric" pattern="\d{11}" maxlength="11"></div>
+                    <div><label>Teléfono</label><input name="telefono" th:value="${editando.telefono()}"></div>
+                </div>
+                <div class="fila">
+                    <div><label>Límite de crédito S/</label><input name="limite" type="number" step="0.01" min="0" th:value="${editando.limiteCredito()}" required></div>
+                    <div><label>Plazo (días)</label><input name="plazo" type="number" min="0" max="90" th:value="${editando.plazoDias()}" required></div>
+                </div>
+                <label>Estado</label><select name="estado"><option value="ACTIVO">Activo</option>
+                    <option value="INACTIVO" th:selected="${editando.estado() == 'INACTIVO'}">Inactivo</option></select>
+                <div class="botones"><a class="btn btn-sec" th:href="@{/clientes}">Cancelar</a><button class="btn" type="submit">Guardar cambios</button></div>
+            </form>
+        </th:block>
+        <h2>Editar datos de un cliente</h2>
+        <a class="item" th:each="c : ${clientes}" th:href="@{/clientes(editar=${c.id()})}">
+            <span class="t1" th:text="${c.nombreComercial()}"></span><span class="gris" th:text="${c.estado() == 'ACTIVO'} ? 'Editar ›' : 'Inactivo ›'"></span>
+        </a>
+    </th:block>
+    <p th:replace="~{fragments/base :: pie('P06 Clientes · RF08 RF32')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

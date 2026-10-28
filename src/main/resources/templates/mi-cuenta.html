@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Mi cuenta')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Mi cuenta', '/mas')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <div class="item"><div><div class="t1" th:text="${yo.username}">usuario</div><div class="t2" th:text="${yo.rolTexto}">rol</div></div></div>
+
+    <h2>Cambiar contraseña (RF04)</h2>
+    <form th:action="@{/mi-cuenta/clave}" method="post" class="tarjeta">
+        <label>Contraseña actual</label><input type="password" name="actual" autocomplete="current-password" required>
+        <label>Nueva contraseña (mínimo 8)</label><input type="password" name="nueva" minlength="8" autocomplete="new-password" required>
+        <label>Repetir nueva contraseña</label><input type="password" name="repetir" minlength="8" autocomplete="new-password" required>
+        <button class="btn" type="submit">Guardar</button>
+    </form>
+
+    <h2>Cerrar sesión (RF03)</h2>
+    <div id="aviso-pendientes" class="alerta alerta-ok">Ventas sin enviar: 0 · puede cerrar sesión con seguridad</div>
+    <form th:action="@{/logout}" method="post" id="form-salir">
+        <button class="btn btn-rojo" type="submit">Cerrar sesión</button>
+    </form>
+    <p th:replace="~{fragments/base :: pie('P04 Mi cuenta · RF03 RF04')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>

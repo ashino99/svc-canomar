@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/base :: head('Saldo de mercadería')}"></head>
+<body>
+<header th:replace="~{fragments/base :: barra('Saldo de mercadería', '/inicio')}"></header>
+<main class="contenido">
+    <div th:replace="~{fragments/base :: mensajes}"></div>
+    <div class="kpis">
+        <div class="kpi"><small>Saldo total</small><b th:text="${@fmt.kg(total)}"></b></div>
+        <div class="kpi"><small>Antiguo (alerta)</small><b class="rojo" th:text="${@fmt.kg(antiguo)}"></b></div>
+    </div>
+    <h2>Saldo por antigüedad (RF28)</h2>
+    <p class="ayuda">Verde: reciente · naranja: por vencer · rojo: rematar o consumir (RF29).</p>
+    <div class="item" th:each="l : ${lineas}">
+        <div><div class="t1" th:text="${l.lote().producto()}"></div>
+            <div class="t2" th:text="'Ingresó ' + ${@fmt.fecha(l.lote().fechaIngreso())} + ' · ' + (${l.dias() == 0} ? 'hoy' : ${l.dias()} + ' días') + ' · costo ' + ${@fmt.soles(l.lote().costoKg())}"></div></div>
+        <span class="v" th:classappend="${l.color()}" th:text="${@fmt.kg(l.lote().kilos())}"></span>
+    </div>
+    <p class="ayuda" th:if="${lineas.isEmpty()}">No hay mercadería en saldo.</p>
+    <a class="btn btn-sec" th:href="@{/saldo/cierre}">Cierre del puesto ›</a>
+
+    <h2>Autoconsumo (RF22)</h2>
+    <form th:action="@{/saldo/autoconsumo}" method="post" class="tarjeta">
+        <div class="fila">
+            <div><label>Producto</label><select name="idProducto"><option th:each="p : ${productos}" th:value="${p.id()}" th:text="${p.nombre()}"></option></select></div>
+            <div><label>Kilos</label><input name="kilos" type="number" step="0.01" min="0.01" inputmode="decimal" required></div>
+        </div>
+        <button class="btn" type="submit">Registrar autoconsumo</button>
+    </form>
+
+    <th:block sec:authorize="hasRole('ADMINISTRADOR')">
+        <h2>Ajuste de saldo (RF30)</h2>
+        <form th:action="@{/saldo/ajuste}" method="post" class="tarjeta">
+            <div class="fila">
+                <div><label>Producto</label><select name="idProducto"><option th:each="p : ${productos}" th:value="${p.id()}" th:text="${p.nombre()}"></option></select></div>
+                <div><label>Kilos (− resta, + suma)</label><input name="kilos" type="number" step="0.01" inputmode="decimal" placeholder="-0.80" required></div>
+            </div>
+            <div class="fila">
+                <div><label>Tipo</label><select name="tipo"><option value="MERMA">Merma</option><option value="DESECHO">Desecho</option><option value="CORRECCION">Corrección</option></select></div>
+                <div><label>Motivo</label><input name="motivo" required maxlength="150" placeholder="Desecho por mal estado"></div>
+            </div>
+            <button class="btn" type="submit">Registrar ajuste</button>
+        </form>
+    </th:block>
+    <p th:replace="~{fragments/base :: pie('P12 Saldo de mercadería · RF22 RF28 RF29 RF30')}"></p>
+</main>
+<nav th:replace="~{fragments/base :: nav('mas')}"></nav>
+<script th:replace="~{fragments/base :: scripts}"></script>
+</body>
+</html>
