@@ -1,0 +1,47 @@
+digraph N { rankdir=LR; nodesep=0.18; ranksep=0.9;
+node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, width=1.9, height=0.5]; edge [color="#546E7A", arrowsize=0.7];
+P01 [label="P01 Iniciar sesión", fillcolor="#E0E0E0"];
+P02 [label="P02 Inicio
+(panel)", fillcolor="#E0E0E0"];
+P04 [label="P04 Mi cuenta", fillcolor="#E0E0E0"];
+P06 [label="P06 Clientes", fillcolor="#E0E0E0"];
+P10 [label="P10 Vender", fillcolor="#C8E6C9"];
+P11 [label="P11 Ventas del día", fillcolor="#C8E6C9"];
+P08 [label="P08 Nueva compra", fillcolor="#C8E6C9"];
+P09 [label="P09 Precios del día", fillcolor="#C8E6C9"];
+P12 [label="P12 Saldo", fillcolor="#C8E6C9"];
+P13 [label="P13 Cierre del puesto", fillcolor="#C8E6C9"];
+P16 [label="P16 Gastos y cuadre", fillcolor="#C8E6C9"];
+P07 [label="P07 Proveedores", fillcolor="#FFE0B2"];
+P14 [label="P14 Cobranza", fillcolor="#FFE0B2"];
+P15 [label="P15 Estado de cuenta", fillcolor="#FFE0B2"];
+P17 [label="P17 Ganancia", fillcolor="#FFE0B2"];
+P05 [label="P05 Productos", fillcolor="#FFE0B2"];
+P03 [label="P03 Usuarios", fillcolor="#FFE0B2"];
+P20 [label="P20 Respaldo y bitácora", fillcolor="#FFE0B2"];
+P18 [label="P18 Facturas", fillcolor="#BBDEFB"];
+P19 [label="P19 Cierre mensual
+y reportes", fillcolor="#BBDEFB"];
+P01 -> P02;
+P02 -> P04;
+P02 -> P06;
+P02 -> P10;
+P10 -> P11;
+P02 -> P08;
+P02 -> P09;
+P02 -> P12;
+P12 -> P13;
+P02 -> P16;
+P16 -> P17;
+P02 -> P07;
+P02 -> P14;
+P14 -> P15;
+P06 -> P14;
+P02 -> P05;
+P02 -> P03;
+P02 -> P20;
+P02 -> P18;
+P02 -> P19;
+P08 -> P07;
+subgraph cluster_ley { label="Quién la ve"; fontname="Arial"; fontsize=11; style=rounded; color="#9E9E9E";l1 [label="Los 3 roles", fillcolor="#E0E0E0"]; l2 [label="Vendedor y administrador", fillcolor="#C8E6C9"]; l3 [label="Solo administrador", fillcolor="#FFE0B2"]; l4 [label="Contador y administrador", fillcolor="#BBDEFB"]; l1->l2->l3->l4 [style=invis]; }
+}

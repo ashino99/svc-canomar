@@ -1,0 +1,128 @@
+<mxfile host="app.diagrams.net"><diagram name="der_final"><mxGraphModel grid="1" gridSize="10" page="1" pageWidth="1654" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="n0" value="USUARIO
+PK id_usuario
+nombre_completo
+usuario
+clave_hash
+rol
+estado
+intentos_fallidos
+bloqueado_hasta
+fecha_registro" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="284" y="866" width="198" height="198" as="geometry"/></mxCell><mxCell id="n1" value="CONFIGURACION
+PK id_configuracion
+dias_alerta_saldo
+tolerancia_consumo
+tolerancia_cuadre" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="-0" y="914" width="201" height="103" as="geometry"/></mxCell><mxCell id="n2" value="PRODUCTO
+PK id_producto
+nombre
+nombre_corto
+categoria
+estado" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="583" y="327" width="174" height="122" as="geometry"/></mxCell><mxCell id="n3" value="CLIENTE
+PK id_cliente
+nombre_comercial
+ruc
+telefono
+limite_credito
+plazo_dias
+estado" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="0" y="1040" width="200" height="160" as="geometry"/></mxCell><mxCell id="n4" value="PROVEEDOR
+PK id_proveedor
+nombre
+ruc
+tipo
+telefono" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="295" y="123" width="176" height="122" as="geometry"/></mxCell><mxCell id="n5" value="COMPRA
+PK id_compra
+id_proveedor #
+id_usuario #
+fecha
+tipo_pago
+estado" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="597" y="163" width="145" height="141" as="geometry"/></mxCell><mxCell id="n6" value="DETALLE_COMPRA
+PK id_detalle_compra
+id_compra #
+id_producto #
+kilos
+costo_total" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="875" y="183" width="197" height="122" as="geometry"/></mxCell><mxCell id="n7" value="PAGO_PROVEEDOR
+PK id_pago
+id_proveedor #
+id_usuario #
+fecha
+monto
+medio" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="579" y="0" width="182" height="141" as="geometry"/></mxCell><mxCell id="n8" value="PRECIO_DIA
+PK id_precio
+id_producto #
+fecha
+precio_kg
+costo_promedio_kg" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="874" y="327" width="198" height="122" as="geometry"/></mxCell><mxCell id="n9" value="LOTE_SALDO
+PK id_lote
+id_producto #
+id_detalle_compra #
+fecha_ingreso
+kilos_disponibles
+costo_kg" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="1148" y="409" width="201" height="141" as="geometry"/></mxCell><mxCell id="n10" value="AJUSTE_SALDO
+PK id_ajuste
+id_lote #
+id_usuario #
+fecha
+tipo
+kilos
+valor_costo
+motivo" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="1431" y="1380" width="173" height="179" as="geometry"/></mxCell><mxCell id="n11" value="FACTURA
+PK id_factura
+id_cliente #
+serie
+numero
+fecha_emision
+importe
+sujeta_detraccion" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="285" y="661" width="195" height="160" as="geometry"/></mxCell><mxCell id="n12" value="VENTA
+PK id_venta
+uuid_dispositivo
+id_usuario #
+id_cliente #
+id_factura #
+fecha_hora
+fecha_sincronizacion
+tipo_pago
+medio_pago
+es_remate
+estado
+motivo_anulacion" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="564" y="471" width="212" height="255" as="geometry"/></mxCell><mxCell id="n13" value="DETALLE_VENTA
+PK id_detalle_venta
+id_venta #
+id_producto #
+kilos
+precio_kg
+costo_kg" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="881" y="526" width="184" height="141" as="geometry"/></mxCell><mxCell id="n14" value="ABONO
+PK id_abono
+id_cliente #
+id_usuario #
+fecha
+monto
+medio
+estado" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="584" y="1295" width="171" height="160" as="geometry"/></mxCell><mxCell id="n15" value="ABONO_VENTA
+PK id_abono #
+PK id_venta #
+monto_aplicado" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="873" y="906" width="200" height="84" as="geometry"/></mxCell><mxCell id="n16" value="COMPROMISO_PAGO
+PK id_compromiso
+id_cliente #
+fecha_compromiso
+monto
+estado" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="282" y="1490" width="201" height="122" as="geometry"/></mxCell><mxCell id="n17" value="GASTO
+PK id_gasto
+id_usuario #
+fecha
+concepto
+descripcion
+monto
+medio" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="583" y="893" width="173" height="160" as="geometry"/></mxCell><mxCell id="n18" value="CUADRE
+PK id_cuadre
+id_usuario #
+fecha
+efectivo_esperado
+efectivo_contado
+digital_esperado
+digital_revisado
+motivo_diferencia
+ganancia" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="570" y="1074" width="200" height="198" as="geometry"/></mxCell><mxCell id="n19" value="AUDITORIA
+PK id_auditoria
+id_usuario #
+fecha_hora
+operacion
+detalle" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;html=0;whiteSpace=wrap;align=left;fillColor=#DAE8FC;fontFamily=Arial;fontSize=10;" vertex="1" parent="1"><mxGeometry x="583" y="749" width="173" height="122" as="geometry"/></mxCell><mxCell id="e0" value="registra" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n0" target="n5"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e1" value="registra" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n0" target="n7"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e2" value="registra" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n0" target="n10"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e3" value="registra" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n0" target="n12"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e4" value="registra" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n0" target="n14"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e5" value="registra" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n0" target="n17"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e6" value="realiza" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n0" target="n18"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e7" value="genera" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n0" target="n19"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e8" value="es comprado" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n2" target="n6"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e9" value="tiene" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n2" target="n8"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e10" value="tiene" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n2" target="n9"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e11" value="es vendido" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n2" target="n13"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e12" value="recibe" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n3" target="n11"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e13" value="compra al crédito" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n3" target="n12"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e14" value="realiza" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n3" target="n14"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e15" value="promete" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n3" target="n16"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e16" value="vende" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n4" target="n5"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e17" value="recibe" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n4" target="n7"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e18" value="contiene" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n5" target="n6"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e19" value="origina" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="n6" target="n9"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e20" value="se ajusta" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n9" target="n10"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e21" value="sustenta" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n11" target="n12"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e22" value="contiene" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n12" target="n13"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e23" value="recibe" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n12" target="n15"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="e24" value="se aplica" style="endArrow=ERmany;startArrow=ERmandOne;html=1;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="n14" target="n15"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel></diagram></mxfile>
